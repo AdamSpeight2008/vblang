@@ -1,9 +1,8 @@
-* [**Statements**](/Statements/Statements.md)
-  * [**Assignment Statements**](/Statements/Assignments/Assignment_Statements.md)
-    * [Regular Assignment](/Statements/Assignments/Regular_Assignment_Statements.md)
-    * [**Compund Assignment**](/Statements/Assignments/Compound_Assignment_Statements.md)  
-    * [Mid Assignment Statement](/Statements/Assignments/Mid_Assignmnet_Statements.md)
-
+* [**Statements**](/spec/statements/statements.md)
+  * [**Assignment Statements**](/spec/statements/Assignments/Assignment_Statements.md)
+    * [Regular Assignment](/spec/statements/Assignments/Regular_Assignment_Statements.md)
+    * [**Compound Assignment**](/spec/statements/Assignments/Compound_Assignment_Statements.md)  
+    * [Mid Assignment Statement](/spec/statements/Assignments/Mid_Assignment_Statements.md)
 -----
 # Compound Assignment Statements
 

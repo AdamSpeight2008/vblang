@@ -102,37 +102,14 @@ Some places in the syntactic grammar allow for *implicit line continuations*. Wh
 the line terminator is treated as if it was a line continuation.
 
 ```antlr
-Comma
-    : ',' LineTerminator?
-    ;
-
-Period
-    : '.' LineTerminator?
-    ;
-
-OpenParenthesis
-    : '(' LineTerminator?
-    ;
-
-CloseParenthesis
-    : LineTerminator? ')'
-    ;
-
-OpenCurlyBrace
-    : '{' LineTerminator?
-    ;
-
-CloseCurlyBrace
-    : LineTerminator? '}'
-    ;
-
-Equals
-    : '=' LineTerminator?
-    ;
-
-ColonEquals
-    : ':' '=' LineTerminator?
-    ;
+           Comma: ',' LineTerminator? ;
+          Period: '.' LineTerminator? ;
+ OpenParenthesis: '(' LineTerminator? ;
+CloseParenthesis: LineTerminator? ')' ;
+  OpenCurlyBrace: '{' LineTerminator? ;
+ CloseCurlyBrace: LineTerminator? '}' ;
+          Equals: '=' LineTerminator? ;
+     ColonEquals: ':' '=' LineTerminator? ;
 ```
 
 For example, the previous example could also be written as:
@@ -170,10 +147,8 @@ Line continuations will not be inferred in conditional compilation contexts. (__
 Line terminators are not considered white space.)
 
 ```antlr
-WhiteSpace
-    : '<Unicode class Zs>'
-    | '<Unicode Tab 0x0009>'
-    ;
+WhiteSpace:   '<Unicode class Zs>'
+            | '<Unicode Tab 0x0009>' ;
 ```
 
 ### Comments
@@ -181,20 +156,9 @@ WhiteSpace
 A *comment* begins with a single-quote character or the keyword `REM`. A single-quote character is either an ASCII single-quote character, a Unicode left single-quote character, or a Unicode right single-quote character. Comments can begin anywhere on a source line, and the end of the physical line ends the comment. The compiler ignores the characters between the beginning of the comment and the line terminator. Consequently, comments cannot extend across multiple lines by using line continuations.
 
 ```antlr
-Comment
-    : CommentMarker Character*
-    ;
-
-CommentMarker
-    : SingleQuoteCharacter
-    | 'REM'
-    ;
-
-SingleQuoteCharacter
-    : '\''
-    | '<Unicode 0x2018>'
-    | '<Unicode 0x2019>'
-    ;
+             Comment: CommentMarker Character* ;
+       CommentMarker: SingleQuoteCharacter | 'REM' ;
+SingleQuoteCharacter: '\'' | '<Unicode 0x2018>' | '<Unicode 0x2019>' ;
 ```
 
 ## Identifiers
@@ -202,61 +166,25 @@ SingleQuoteCharacter
 An *identifier* is a name. Visual Basic identifiers conform to the Unicode Standard Annex 15 with one exception: identifiers may begin with an underscore (connector) character. If an identifier begins with an underscore, it must contain at least one other valid identifier character to disambiguate it from a line continuation.
 
 ```antlr
-Identifier
-    : NonEscapedIdentifier TypeCharacter?
-    | Keyword TypeCharacter
-    | EscapedIdentifier
-    ;
-
-NonEscapedIdentifier
-    : '<Any IdentifierName but not Keyword>'
-    ;
-
-EscapedIdentifier
-    : '[' IdentifierName ']'
-    ;
-
-IdentifierName
-    : IdentifierStart IdentifierCharacter*
-    ;
-
-IdentifierStart
-    : AlphaCharacter
-    | UnderscoreCharacter IdentifierCharacter
-    ;
-
-IdentifierCharacter
-    : UnderscoreCharacter
-    | AlphaCharacter
-    | NumericCharacter
-    | CombiningCharacter
-    | FormattingCharacter
-    ;
-
-AlphaCharacter
-    : '<Unicode classes Lu,Ll,Lt,Lm,Lo,Nl>'
-    ;
-
-NumericCharacter
-    : '<Unicode decimal digit class Nd>'
-    ;
-
-CombiningCharacter
-    : '<Unicode combining character classes Mn, Mc>'
-    ;
-
-FormattingCharacter
-    : '<Unicode formatting character class Cf>'
-    ;
-
-UnderscoreCharacter
-    : '<Unicode connection character class Pc>'
-    ;
-
-IdentifierOrKeyword
-    : Identifier
-    | Keyword
-    ;
+          Identifier:   NonEscapedIdentifier TypeCharacter? 
+                      | Keyword TypeCharacter
+                      | EscapedIdentifier   ;         
+NonEscapedIdentifier: '<Any IdentifierName but not Keyword>' ;
+   EscapedIdentifier: '[' IdentifierName ']'  ;
+      IdentifierName: IdentifierStart IdentifierCharacter*   ;
+     IdentifierStart:   AlphaCharacter
+                      | UnderscoreCharacter IdentifierCharacter;
+ IdentifierCharacter:   UnderscoreCharacter
+                      | AlphaCharacter
+                      | NumericCharacter
+                      | CombiningCharacter
+                      | FormattingCharacter   ;
+      AlphaCharacter: '<Unicode classes Lu,Ll,Lt,Lm,Lo,Nl>' ;
+    NumericCharacter: '<Unicode decimal digit class Nd>'    ;
+  CombiningCharacter: '<Unicode combining character classes Mn, Mc>' ;
+ FormattingCharacter: '<Unicode formatting character class Cf>' ;
+ UnderscoreCharacter: '<Unicode connection character class Pc>' ;
+ IdentifierOrKeyword: Identifier | Keyword ;
 ```
 
 Regular identifiers may not match keywords, but escaped identifiers or identifiers with a type character can. An *escaped identifier* is an identifier delimited by square brackets. Escaped identifiers follow the same rules as regular identifiers except that they may match keywords and may not have type characters.
@@ -289,38 +217,18 @@ Identifiers are case insensitive, so two identifiers are considered to be the sa
 A *type character* denotes the type of the preceding identifier. The type character is not considered part of the identifier.
 
 ```antlr
-TypeCharacter
-    : IntegerTypeCharacter
-    | LongTypeCharacter
-    | DecimalTypeCharacter
-    | SingleTypeCharacter
-    | DoubleTypeCharacter
-    | StringTypeCharacter
-    ;
-
-IntegerTypeCharacter
-    : '%'
-    ;
-
-LongTypeCharacter
-    : '&'
-    ;
-
-DecimalTypeCharacter
-    : '@'
-    ;
-
-SingleTypeCharacter
-    : '!'
-    ;
-
-DoubleTypeCharacter
-    : '#'
-    ;
-
-StringTypeCharacter
-    : '$'
-    ;
+       TypeCharacter:   IntegerTypeCharacter
+                      | LongTypeCharacter
+                      | DecimalTypeCharacter
+                      | SingleTypeCharacter
+                      | DoubleTypeCharacter
+                      | StringTypeCharacter   ;
+IntegerTypeCharacter: '%'   ;
+   LongTypeCharacter: '&'   ;
+DecimalTypeCharacter: '@'   ;
+ SingleTypeCharacter: '!'   ;
+ DoubleTypeCharacter: '#'   ;
+ StringTypeCharacter: '$'   ;
 ```
 
 If a declaration includes a type character, the type character must agree with the type specified in the declaration itself; otherwise, a compile-time error occurs. If the declaration omits the type (for example, if it does not specify an `As` clause), the type character is implicitly substituted as the type of the declaration.
@@ -360,46 +268,45 @@ A *keyword* is a word that has special meaning in a
 language construct. All keywords are reserved by the language and may not be used as identifiers unless the identifiers are escaped. (__Note.__ `EndIf`, `GoSub`, `Let`, `Variant`, and `Wend` are retained as keywords, although they are no longer used in Visual Basic.)
 
 ```antlr
-Keyword
-    : 'AddHandler'      | 'AddressOf'      | 'Alias'       | 'And'
-    | 'AndAlso'         | 'As'             | 'Boolean'     | 'ByRef'
-	| 'Byte'            | 'ByVal'          | 'Call'        | 'Case'        
-	| 'Catch'           | 'CBool'          | 'CByte'       | 'CChar'       
-	| 'CDate'           | 'CDbl'           | 'CDec'        | 'Char'        
-	| 'CInt'            | 'Class'          | 'CLng'        | 'CObj'        
-	| 'Const'           | 'Continue'       | 'CSByte'      | 'CShort'      
-	| 'CSng'            | 'CStr'           | 'CType'       | 'CUInt'       
-	| 'CULng'           | 'CUShort'        | 'Date'        | 'Decimal'     
-	| 'Declare'         | 'Default'        | 'Delegate'    | 'Dim'         
-	| 'DirectCast'      | 'Do'             | 'Double'      | 'Each'        
-	| 'Else'            | 'ElseIf'         | 'End'         | 'EndIf'       
-	| 'Enum'            | 'Erase'          | 'Error'       | 'Event'       
-	| 'Exit'            | 'False'          | 'Finally'     | 'For'         
-	| 'Friend'          | 'Function'       | 'Get'         | 'GetType'     
-	| 'GetXmlNamespace' | 'Global'         | 'GoSub'       | 'GoTo'        
-	| 'Handles'         | 'If'             | 'Implements'  | 'Imports'     
-	| 'In'              | 'Inherits'       | 'Integer'     | 'Interface'   
-	| 'Is'              | 'IsNot'          | 'Let'         | 'Lib'         
-	| 'Like'            | 'Long'           | 'Loop'        | 'Me'          
-	| 'Mod'             | 'Module'         | 'MustInherit' | 'MustOverride'
-	| 'MyBase'          | 'MyClass'        | 'Namespace'   | 'Narrowing'   
-	| 'New'             | 'Next'           | 'Not'         | 'Nothing'     
-	| 'NotInheritable'  | 'NotOverridable' | 'Object'      | 'Of'          
-	| 'On'              | 'Operator'       | 'Option'      | 'Optional'    
-	| 'Or'              | 'OrElse'         | 'Overloads'   | 'Overridable' 
-	| 'Overrides'       | 'ParamArray'     | 'Partial'     | 'Private'     
-	| 'Property'        | 'Protected'      | 'Public'      | 'RaiseEvent'  
-	| 'ReadOnly'        | 'ReDim'          | 'REM'         | 'RemoveHandler'
-	| 'Resume'          | 'Return'         | 'SByte'       | 'Select'      
-	| 'Set'             | 'Shadows'        | 'Shared'      | 'Short'       
-	| 'Single'          | 'Static'         | 'Step'        | 'Stop'        
-	| 'String'          | 'Structure'      | 'Sub'         | 'SyncLock'    
-	| 'Then'            | 'Throw'          | 'To'          | 'True'        
-	| 'Try'             | 'TryCast'        | 'TypeOf'      | 'UInteger'    
-	| 'ULong'           | 'UShort'         | 'Using'       | 'Variant'     
-	| 'Wend'            | 'When'           | 'While'       | 'Widening'    
-	| 'With'            | 'WithEvents'     | 'WriteOnly'   | 'Xor'         
-    ;
+Keyword:
+  'AddHandler'      | 'AddressOf'      | 'Alias'       | 'And'
+| 'AndAlso'         | 'As'             | 'Boolean'     | 'ByRef'
+| 'Byte'            | 'ByVal'          | 'Call'        | 'Case'        
+| 'Catch'           | 'CBool'          | 'CByte'       | 'CChar'       
+| 'CDate'           | 'CDbl'           | 'CDec'        | 'Char'        
+| 'CInt'            | 'Class'          | 'CLng'        | 'CObj'        
+| 'Const'           | 'Continue'       | 'CSByte'      | 'CShort'      
+| 'CSng'            | 'CStr'           | 'CType'       | 'CUInt'       
+| 'CULng'           | 'CUShort'        | 'Date'        | 'Decimal'     
+| 'Declare'         | 'Default'        | 'Delegate'    | 'Dim'         
+| 'DirectCast'      | 'Do'             | 'Double'      | 'Each'        
+| 'Else'            | 'ElseIf'         | 'End'         | 'EndIf'       
+| 'Enum'            | 'Erase'          | 'Error'       | 'Event'       
+| 'Exit'            | 'False'          | 'Finally'     | 'For'         
+| 'Friend'          | 'Function'       | 'Get'         | 'GetType'     
+| 'GetXmlNamespace' | 'Global'         | 'GoSub'       | 'GoTo'        
+| 'Handles'         | 'If'             | 'Implements'  | 'Imports'     
+| 'In'              | 'Inherits'       | 'Integer'     | 'Interface'   
+| 'Is'              | 'IsNot'          | 'Let'         | 'Lib'         
+| 'Like'            | 'Long'           | 'Loop'        | 'Me'          
+| 'Mod'             | 'Module'         | 'MustInherit' | 'MustOverride'
+| 'MyBase'          | 'MyClass'        | 'Namespace'   | 'Narrowing'   
+| 'New'             | 'Next'           | 'Not'         | 'Nothing'     
+| 'NotInheritable'  | 'NotOverridable' | 'Object'      | 'Of'          
+| 'On'              | 'Operator'       | 'Option'      | 'Optional'    
+| 'Or'              | 'OrElse'         | 'Overloads'   | 'Overridable' 
+| 'Overrides'       | 'ParamArray'     | 'Partial'     | 'Private'     
+| 'Property'        | 'Protected'      | 'Public'      | 'RaiseEvent'  
+| 'ReadOnly'        | 'ReDim'          | 'REM'         | 'RemoveHandler'
+| 'Resume'          | 'Return'         | 'SByte'       | 'Select'      
+| 'Set'             | 'Shadows'        | 'Shared'      | 'Short'       
+| 'Single'          | 'Static'         | 'Step'        | 'Stop'        
+| 'String'          | 'Structure'      | 'Sub'         | 'SyncLock'    
+| 'Then'            | 'Throw'          | 'To'          | 'True'        
+| 'Try'             | 'TryCast'        | 'TypeOf'      | 'UInteger'    
+| 'ULong'           | 'UShort'         | 'Using'       | 'Variant'     
+| 'Wend'            | 'When'           | 'While'       | 'Widening'    
+| 'With'            | 'WithEvents'     | 'WriteOnly'   | 'Xor'             ;
 ```
 
 ## Literals
